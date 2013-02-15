@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!-- 头文件属性必须要 -->
+<taglib version="2.1" xmlns="http://java.sun.com/xml/ns/javaee"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee web-jsptaglibrary_2_1.xsd">
+  <!-- 标记库版本信息要有 -->
+ <tlib-version>1.0</tlib-version>
+ <short-name>math</short-name>
+   	
+   	<!-- 提供精确的加法运算 -->
+	<function>
+		<name>add</name>
+		<function-class>com.jamesli.fn.Math</function-class>
+		<function-signature>double add(double,double)</function-signature>
+	</function>
+	
+</taglib>
