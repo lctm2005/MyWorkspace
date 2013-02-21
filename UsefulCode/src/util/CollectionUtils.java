@@ -24,7 +24,7 @@ public class CollectionUtils {
 	 * @return	 <code>true</code> if collection is empty
 	 */
 	@SuppressWarnings("rawtypes")
-	public static final boolean isEmpty(Collection collection) {
+	public static final boolean isEmpty(final Collection collection) {
 		return null == collection || collection.isEmpty();
 	}
 	
@@ -34,7 +34,7 @@ public class CollectionUtils {
 	 * @return <code>true</code> if map is empty
 	 */
 	@SuppressWarnings("rawtypes")
-	public static boolean isEmpty(Map map) {
+	public static boolean isEmpty(final Map map) {
 		return map == null || map.isEmpty();
 	}
 
@@ -43,7 +43,7 @@ public class CollectionUtils {
 	 * @param array	数组对象
 	 * @return List
 	 */
-	public static final <T> List<T> arrayToList(T[] array) {
+	public static final <T> List<T> arrayToList(final T[] array) {
 		if (array == null) {
 			return Collections.emptyList();
 		}

@@ -16,7 +16,7 @@ public class StringUtils {
 	 * @param string
 	 * @return <code>true</code> if string == null or string equals "",else return <code>false</code>
 	 */
-	public static final boolean isEmpty(String string) {
+	public static final boolean isEmpty(final String string) {
 		if(null == string || EMPTY_STRING.equals(string)) {
 			return true;
 		}
@@ -28,7 +28,7 @@ public class StringUtils {
 	 * @param string
 	 * @return <code>false</code> if string == null or string equals "",else return <code>true</code>
 	 */
-	public static final boolean isNotEmpty(String string) {
+	public static final boolean isNotEmpty(final String string) {
 		return !isEmpty(string);
 	}
 }
