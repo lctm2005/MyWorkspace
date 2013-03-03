@@ -7,7 +7,7 @@ package enum_;
  *
  * 2013-2-13
  */
-public enum ConstantsByEnum {
+public enum FruitType {
 
 	APPLE(0,"苹果"),
 	BANANA(1,"香蕉"),
@@ -16,7 +16,7 @@ public enum ConstantsByEnum {
 	private final int index;
 	private final String desc;
 	
-	ConstantsByEnum(int index, String desc) {
+	FruitType(int index, String desc) {
 		this.index = index;
 		this.desc = desc;
 	}
