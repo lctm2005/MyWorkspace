@@ -22,7 +22,9 @@ public class Test {
 		//Test EnumSet
 		testEnumSet(EnumSet.of(FruitType.APPLE,FruitType.APPLE,FruitType.BANANA));
 		
+		//EnumMap
 		EnumMap<FruitType,Set<FruitType>> map = new EnumMap<FruitType,Set<FruitType>>(FruitType.class);
+		map.values();
 	}
 	
 	public static void testEnumSet(Set<FruitType> types) {

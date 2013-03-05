@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -75,5 +76,13 @@ public class CollectionUtils {
 	 */
 	public static final <T> LinkedList<T> newLinkedList() {
 		return new LinkedList<T>();
+	}
+	
+	/**
+	 * 支持泛型的新建HashSet方法，书写方便
+	 * @return 新建的HashSet
+	 */
+	public static final <T> HashSet<T> newHashSet() {
+		return new HashSet<T>();
 	}
 }

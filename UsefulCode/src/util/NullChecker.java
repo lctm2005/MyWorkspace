@@ -1,6 +1,6 @@
 package util;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * 空指针检查器
@@ -11,7 +11,7 @@ import java.util.List;
  */
 public class NullChecker {
 
-	private List<Object> list = CollectionUtils.newArrayList();
+	private Set<Object> set = CollectionUtils.newHashSet();
 	
 	/**
 	 * 添加受检对象
@@ -19,7 +19,7 @@ public class NullChecker {
 	 * @return this
 	 */
 	public NullChecker add(Object object) {
-		list.add(object);
+		set.add(object);
 		return this;
 	}
 	
@@ -28,12 +28,7 @@ public class NullChecker {
 	 * @return <code>true</code> if all is null,else return <code>false</code>
 	 */
 	public boolean isAllNull() {
-		for(Object object : list) {
-			if(ObjectUtils.isNotNull(object)) {
-				return false;
-			}
-		}
-		return true;
+		return set.contains(null) && 1 == set.size();
 	}
 	
 	/**
@@ -41,12 +36,7 @@ public class NullChecker {
 	 * @return <code>true</code> if has a null,else return <code>false</code>
 	 */
 	public boolean hasNull() {
-		for(Object object : list) {
-			if(ObjectUtils.isNull(object)) {
-				return true;
-			}
-		}
-		return false;
+		return set.contains(null);
 	}
 	
 	/**
@@ -55,6 +45,20 @@ public class NullChecker {
 	 */
 	public boolean isNoneOfNull() {
 		return !hasNull();
+	}
+	
+	
+	/**
+	 * Test
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		System.out.println(true == new NullChecker().add(null).add("").hasNull());
+		System.out.println(false == new NullChecker().add("+").add("").hasNull());
+		System.out.println(false == new NullChecker().add(null).add("").isNoneOfNull());
+		System.out.println(true == new NullChecker().add("+").add("").isNoneOfNull());
+		System.out.println(false == new NullChecker().add(null).add("").isAllNull());
+		System.out.println(true == new NullChecker().add(null).add(null).isAllNull());
 	}
 	
 }
