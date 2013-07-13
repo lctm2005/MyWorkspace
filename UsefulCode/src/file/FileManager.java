@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
 
+import util.StringUtils;
+
 import log.ILogger;
 import log.SystemLogger;
 
@@ -27,6 +29,30 @@ public class FileManager {
 	private static ILogger logger = new SystemLogger(FileManager.class);
 
 	/**
+	 * 重命名
+	 * @param source		源文件
+	 * @param newName  新名字
+	 * @return
+	 */
+	public static boolean rename(File source, String newName) {
+		if (isNull(source) || StringUtils.isEmpty(newName)) {
+			logger.error("source is null or newName is empty");
+			return false;
+		}
+		if (!source.exists()) {
+			logger.error(source.getAbsolutePath() + " is not exist");
+			return false;
+		}
+		String path = source.getAbsolutePath();
+		String name = source.getName();
+		int index = name.indexOf('.');
+		if(-1 != index) {
+			return source.renameTo(new File(path.substring(0, path.indexOf(name)) + File.separator + newName +name.substring(index) ));
+		}
+		return source.renameTo(new File(path.substring(0, path.indexOf(name)) + File.separator + newName));
+	}
+	
+	/**
 	 * 复制文件
 	 * 
 	 * @param source
@@ -37,7 +63,7 @@ public class FileManager {
 	 */
 	public static boolean copy(File source, File target) {
 		if (isNull(source) || isNull(target)) {
-			logger.error("source is null or target");
+			logger.error("source is null or target is null");
 			return false;
 		}
 		if (!source.exists()) {
@@ -111,6 +137,7 @@ public class FileManager {
 		}
 		return true;
 	}
+	
 
 	/**
 	 * * 创建空文件

@@ -101,4 +101,8 @@ public class FileManagerTest {
 		assertEquals(SUCCESS, append(source, fis));
 	}
 
+	@Test
+	public void testRename() {
+		assertEquals(SUCCESS, rename(source, "src2"));
+	}
 }

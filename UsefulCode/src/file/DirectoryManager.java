@@ -3,6 +3,8 @@ package file;
 import static util.ObjectUtils.isNull;
 import java.io.File;
 
+import util.StringUtils;
+
 import log.ILogger;
 import log.SystemLogger;
 
@@ -174,4 +176,22 @@ public class DirectoryManager {
 		return directory.mkdirs();
 	}
 
+	/**
+	 * 重命名
+	 * @param source		源文件夹
+	 * @param newName  新名字
+	 * @return
+	 */
+	public static boolean rename(File source, String newName) {
+		if (isNull(source) || StringUtils.isEmpty(newName)) {
+			logger.error("source is null or newName is empty");
+			return false;
+		}
+		if (!source.exists()) {
+			logger.error(source.getAbsolutePath() + " is not exist");
+			return false;
+		}
+		String path = source.getAbsolutePath();
+		return source.renameTo(new File(path.substring(0, path.indexOf(source.getName())) + File.separator + newName));
+	}
 }
