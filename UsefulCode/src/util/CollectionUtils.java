@@ -9,6 +9,9 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
+
 
 /**
  * 集合工具类
@@ -84,5 +87,21 @@ public class CollectionUtils {
 	 */
 	public static final <T> HashSet<T> newHashSet() {
 		return new HashSet<T>();
+	}
+	
+	/**
+	 * Map转List
+	 * @param <K>	Map的KEY类型
+	 * @param <T>	Map的VALUE类型
+	 * @param map	Map对象
+	 * @return
+	 */
+	public static final <K,T> List<T> mapToList(Map<K,T> map) {
+		List<T> list = newArrayList();
+		Set<Entry<K,T>> entrySet = map.entrySet();
+		for(Entry<K,T> e : entrySet) {
+			list.add(e.getValue());
+		}
+		return list;
 	}
 }
