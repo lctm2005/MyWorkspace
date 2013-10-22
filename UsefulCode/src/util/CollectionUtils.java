@@ -6,12 +6,13 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
-
+import static util.ObjectUtils.*;
 
 /**
  * 集合工具类
@@ -97,10 +98,30 @@ public class CollectionUtils {
 	 * @return
 	 */
 	public static final <K,T> List<T> mapToList(Map<K,T> map) {
+		if(isNull(map) || map.isEmpty()) {
+			return Collections.emptyList();
+		}
 		List<T> list = newArrayList();
 		Set<Entry<K,T>> entrySet = map.entrySet();
 		for(Entry<K,T> e : entrySet) {
 			list.add(e.getValue());
+		}
+		return list;
+	}
+	
+	/**
+	 * Set转List
+	 * @param set Set对象
+	 * @return
+	 */
+	public static final <T> List<T> setToList(Set<T> set) {
+		if(isNull(set) || set.isEmpty()) {
+			return Collections.emptyList();
+		}
+		List<T> list = newArrayList();
+		Iterator<T> it = set.iterator();
+		while(it.hasNext()) {
+			list.add(it.next());
 		}
 		return list;
 	}
