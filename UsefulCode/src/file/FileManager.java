@@ -5,17 +5,21 @@ import static util.ObjectUtils.isNull;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
 
-import util.StringUtils;
-
 import log.ILogger;
 import log.SystemLogger;
+import util.StringUtils;
 
 /**
  * 文件管理器
@@ -153,7 +157,7 @@ public class FileManager {
 		}
 		try {
 			if(file.exists()) {
-				logger.error("File is already exist");
+				logger.error("File is already exist:" + file.getAbsolutePath());
 				return false;
 			}
 			return file.createNewFile();
@@ -164,7 +168,7 @@ public class FileManager {
 	}
 
 	/**
-	 * * 创建文件
+	 * 创建文件
 	 * 
 	 * @param file
 	 *            待创建文件
@@ -173,71 +177,11 @@ public class FileManager {
 	 * @return 成功返回true，失败返回false
 	 */
 	public static boolean create(File file, InputStream inputStream) {
-		if (isNull(file) || isNull(inputStream)) {
-			logger.error("file is null or inputStream is null");
+		if (isNull(inputStream)) {
+			logger.error("inputStream is null");
 			return false;
 		}
-		if (file.exists()) {
-			logger.error("File is already exist");
-			return false;
-		}
-		return cover(file, inputStream);
-	}
-
-	/**
-	 * * 创建文件
-	 * 
-	 * @param file
-	 *            待创建文件
-	 * @param content
-	 *            文件内容
-	 * @return 成功返回true，失败返回false
-	 */
-	public static boolean create(File file, String content) {
-		if (isNull(file) || isNull(content)) {
-			logger.error("file is null or content is null");
-			return false;
-		}
-		if (file.exists()) {
-			logger.error("File is already exist");
-			return false;
-		}
-		return cover(file, content);
-	}
-
-	/**
-	 * * 创建文件
-	 * 
-	 * @param file
-	 *            待创建文件
-	 * @param content
-	 *            文件内容
-	 * @return 成功返回true，失败返回false
-	 */
-	public static boolean create(File file, byte[] content) {
-		if (isNull(file) || isNull(content)) {
-			logger.error("file is null or content is null");
-			return false;
-		}
-		if (file.exists()) {
-			logger.error("File is already exist");
-			return false;
-		}
-		return cover(file, content);
-	}
-
-	/**
-	 * 覆盖文件
-	 * 
-	 * @param file
-	 *            目标文件
-	 * @param inputStream
-	 *            输入流
-	 * @return 成功返回true，失败返回false
-	 */
-	public static boolean cover(File file, InputStream inputStream) {
-		if (isNull(file) || isNull(inputStream)) {
-			logger.error("file is null or inputStream is null");
+		if(!create(file)) {
 			return false;
 		}
 		BufferedInputStream bis = null;
@@ -274,51 +218,21 @@ public class FileManager {
 	}
 
 	/**
-	 * 覆盖文件
+	 * * 创建文件
 	 * 
 	 * @param file
-	 *            目标文件
+	 *            待创建文件
 	 * @param content
 	 *            文件内容
 	 * @return 成功返回true，失败返回false
 	 */
-	public static boolean cover(File file, String content) {
+	public static boolean create(File file, byte[] content) {
 		if (isNull(file) || isNull(content)) {
 			logger.error("file is null or content is null");
 			return false;
 		}
-		BufferedOutputStream bos = null;
-		try {
-			bos = new BufferedOutputStream(new FileOutputStream(file));
-			bos.write(content.getBytes());
-			bos.flush();
-			return true;
-		} catch (IOException e) {
-			logger.error("Create file failed", e);
-			return false;
-		} finally {
-			if (isNotNull(bos)) {
-				try {
-					bos.close();
-				} catch (IOException e) {
-					logger.error("Close BufferedOutputStream failed", e);
-				}
-			}
-		}
-	}
-
-	/**
-	 * * 覆盖文件
-	 * 
-	 * @param file
-	 *            目标文件
-	 * @param content
-	 *            文件内容
-	 * @return 成功返回true，失败返回false
-	 */
-	public static boolean cover(File file, byte[] content) {
-		if (isNull(file) || isNull(content)) {
-			logger.error("file is null or content is null");
+		if (file.exists()) {
+			logger.error("File is already exist");
 			return false;
 		}
 		BufferedOutputStream bos = null;
@@ -340,6 +254,68 @@ public class FileManager {
 			}
 		}
 	}
+	
+	/**
+	 * * 创建文件
+	 * 
+	 * @param file
+	 *            待创建文件
+	 * @param content
+	 *            文件内容
+	 * @return 成功返回true，失败返回false
+	 */
+	public static boolean create(File file, String content) {
+		return create(file, content.getBytes());
+	}
+	
+
+	/**
+	 * 覆盖文件
+	 * 
+	 * @param file
+	 *            目标文件
+	 * @param inputStream
+	 *            输入流
+	 * @return 成功返回true，失败返回false
+	 */
+	public static boolean cover(File file, InputStream inputStream) {
+		if(!delete(file)) {
+			return false;
+		}
+		return create(file, inputStream);
+	}
+
+	/**
+	 * 覆盖文件
+	 * 
+	 * @param file
+	 *            目标文件
+	 * @param content
+	 *            文件内容
+	 * @return 成功返回true，失败返回false
+	 */
+	public static boolean cover(File file, String content) {
+		if(!delete(file)) {
+			return false;
+		}
+		return create(file, content);
+	}
+
+	/**
+	 * * 覆盖文件
+	 * 
+	 * @param file
+	 *            目标文件
+	 * @param content
+	 *            文件内容
+	 * @return 成功返回true，失败返回false
+	 */
+	public static boolean cover(File file, byte[] content) {
+		if(!delete(file)) {
+			return false;
+		}
+		return create(file, content);
+	}
 
 	/**
 	 * 追加文件
@@ -352,7 +328,7 @@ public class FileManager {
 	 */
 	public static boolean append(File file, String append) {
 		if (isNull(file) || isNull(append)) {
-			logger.error("file is nul or append is nulll");
+			logger.error("file is nul or append is null");
 			return false;
 		}
 		RandomAccessFile randomFile = null;
@@ -387,7 +363,7 @@ public class FileManager {
 	 */
 	public static boolean append(File file, byte[] append) {
 		if (isNull(file) || isNull(append)) {
-			logger.error("file is nul or append is nulll");
+			logger.error("file is nul or append is null");
 			return false;
 		}
 		RandomAccessFile randomFile = null;
@@ -422,7 +398,7 @@ public class FileManager {
 	 */
 	public static boolean append(File file, InputStream inputStream) {
 		if (isNull(file) || isNull(inputStream)) {
-			logger.error("file is nul or inputStream is nulll");
+			logger.error("file is nul or inputStream is null");
 			return false;
 		}
 		BufferedInputStream bis = null;
@@ -458,4 +434,85 @@ public class FileManager {
 			}
 		}
 	}
+	
+	/**
+	 * 替换文本内容
+	 * @param file			目标文件
+	 * @param target		查找目标
+	 * @param replaceText	替换为
+	 * @param result		替换结果，当不关心结果时可以为null
+	 * @return 成功返回true，失败返回false
+	 * @see FileReplaceResult
+	 */
+	public static boolean replace(File file, String target, String replaceText, FileReplaceResult result) {
+		if (isNull(file) || StringUtils.isEmpty(target)) {
+			logger.error("file is nul or target is empty");
+			return false;
+		}
+		BufferedReader br = null;
+		BufferedWriter bw = null;
+		//创建临时文件
+		File temp = new File(file.getAbsolutePath() + ".tmp");
+		create(temp);
+		int count = 0;
+		if(isNotNull(result)) {
+			result.setFile(file);
+		}
+		try {
+			br = new BufferedReader(new FileReader(file));
+			bw = new BufferedWriter(new FileWriter(temp));
+			String line = null;
+			while(StringUtils.isNotEmpty(line = br.readLine())) {
+				String newLine = line.replaceAll(target, replaceText);
+				if(isNotNull(result) && !newLine.equals(line)) {
+					count++;
+				}
+				bw.write(newLine + "\n");
+			}
+			if(isNotNull(result)) {
+				result.setCount(count);
+			}
+		} catch (FileNotFoundException e) {
+			logger.error("Not found " + file.getAbsolutePath(), e);
+			return false;
+		} catch (IOException e) {
+			logger.error("replace " + file.getAbsolutePath() + " failed" , e);
+			return false;
+		}finally {
+			if(isNotNull(br)) {
+				try {
+					br.close();
+				} catch (IOException e) {
+					logger.error("Close BufferedReader failed", e);
+				}
+			}
+			if(isNotNull(bw)) {
+				try {
+					bw.close();
+				} catch (IOException e) {
+					logger.error("Close BufferedReader failed", e);
+				}
+			}
+		}
+		FileInputStream fis = null;
+		try {
+			fis = new FileInputStream(temp);
+			if(!cover(file,fis)) {
+				return false;
+			}
+		} catch (FileNotFoundException e) {
+			logger.error("Not found " + temp.getAbsolutePath(), e);
+			return false;
+		} finally {
+			if(isNotNull(fis)) {
+				try {
+					fis.close();
+				} catch (IOException e) {
+					logger.error("Close FileInputStream failed", e);
+				}
+			}
+		}
+		return delete(temp);
+	}
+	
 }

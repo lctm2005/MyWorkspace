@@ -21,7 +21,6 @@ public class MultiThreadClient {
 
     }
 
-    // 定义一个简单的任务
     private static Runnable createTask(final int taskID) {
         return new Runnable() {
             private Socket socket = null;
@@ -31,11 +30,9 @@ public class MultiThreadClient {
                 System.out.println("Task " + taskID + ":start");
                 try {                    
                     socket = new Socket("localhost", port);
-                    // 发送关闭命令
                     OutputStream socketOut = socket.getOutputStream();
                     socketOut.write("shutdown\r\n".getBytes());
 
-                    // 接收服务器的反馈
                     BufferedReader br = new BufferedReader(
                             new InputStreamReader(socket.getInputStream()));
                     String msg = null;
