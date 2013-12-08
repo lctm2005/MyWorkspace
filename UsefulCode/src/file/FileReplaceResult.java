@@ -10,7 +10,7 @@ import java.io.File;
 public class FileReplaceResult {
 	
 	private File file;		//替换的文件
-	private Integer count;	//替换次数
+	private int count;	//替换次数
 	
 	public File getFile() {
 		return file;
@@ -18,12 +18,13 @@ public class FileReplaceResult {
 	public void setFile(File file) {
 		this.file = file;
 	}
-	public Integer getCount() {
+	public int getCount() {
 		return count;
 	}
-	public void setCount(Integer count) {
+	public void setCount(int count) {
 		this.count = count;
 	}
+	
 	@Override
 	public String toString() {
 		return "FileReplaceResult [target=" + file.getAbsolutePath() + "," + count + " occurrence was replaced]";

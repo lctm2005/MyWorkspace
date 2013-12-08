@@ -445,8 +445,9 @@ public class FileManager {
 	 * @see FileReplaceResult
 	 */
 	public static boolean replace(File file, String target, String replaceText, FileReplaceResult result) {
-		if (isNull(file) || StringUtils.isEmpty(target)) {
-			logger.error("file is nul or target is empty");
+		//TODO 对目录的情况
+		if (isNull(file) || StringUtils.isEmpty(target) || isNull(replaceText)) {
+			logger.error("file is nul or target is empty or replaceText is null");
 			return false;
 		}
 		BufferedReader br = null;
@@ -513,6 +514,61 @@ public class FileManager {
 			}
 		}
 		return delete(temp);
+	}
+	
+	/**
+	 * 搜索文本内容
+	 * @param file			目标文件
+	 * @param target		查找目标
+	 * @param replaceText	替换为
+	 * @param result		搜索结果，当不关心结果时可以为null
+	 * @return 成功返回true，失败返回false
+	 * @see FileReplaceResult
+	 */
+	public static boolean search(File file, String target, FileSearchResult result) {
+		//TODO 对目录的情况
+		if (isNull(file) || StringUtils.isEmpty(target) || isNull(result)) {
+			logger.error("file is nul or target is empty or result is null");
+			return false;
+		}
+		BufferedReader br = null;
+		//创建临时文件
+		int count = 0;
+		result.setFile(file);
+		try {
+			br = new BufferedReader(new FileReader(file));
+			String line = null;
+			while(StringUtils.isNotEmpty(line = br.readLine())) {
+				if(-1 != line.indexOf(target)) {
+					result.setLine(line);
+					count++;
+				}
+			}
+			if(isNotNull(result)) {
+				result.setCount(count);
+			}
+		} catch (FileNotFoundException e) {
+			logger.error("Not found " + file.getAbsolutePath(), e);
+			return false;
+		} catch (IOException e) {
+			logger.error("replace " + file.getAbsolutePath() + " failed" , e);
+			return false;
+		}finally {
+			if(isNotNull(br)) {
+				try {
+					br.close();
+				} catch (IOException e) {
+					logger.error("Close BufferedReader failed", e);
+				}
+			}
+		}
+		return true;
+	}
+	
+	public static void main(String[] args) {
+		FileSearchResult result = new FileSearchResult();
+		search(new File("D:\\h.log"), "File", result);
+		System.out.println(result);
 	}
 	
 }
