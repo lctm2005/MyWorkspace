@@ -1,11 +1,18 @@
 package com.licong.filemanager.test;
 
+import static com.licong.filemanager.DirectoryManager.copy;
+import static com.licong.filemanager.DirectoryManager.create;
+import static com.licong.filemanager.DirectoryManager.cut;
+import static com.licong.filemanager.DirectoryManager.delete;
+import static com.licong.filemanager.DirectoryManager.rename;
+import static com.licong.filemanager.DirectoryManager.search;
 import static org.junit.Assert.assertEquals;
-import static com.licong.filemanager.DirectoryManager.*;
 
 import java.io.File;
 
 import org.junit.Test;
+
+import com.licong.filemanager.FileSearchResult;
 
 /**
  * @author James-li
@@ -39,5 +46,12 @@ public class DirectoryManagerTest {
 	@Test
 	public void testRename() {
 		assertEquals(SUCCESS, rename(new File("D:\\src"),"src2"));
+	}
+	
+	@Test
+	public void testSearch() {
+		FileSearchResult result = new FileSearchResult();
+		assertEquals(SUCCESS, search(new File("I:\\h\\"), "test", result));
+		System.out.println(result);
 	}
 }

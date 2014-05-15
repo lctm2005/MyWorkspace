@@ -279,7 +279,7 @@ public class FileManager {
 	}
 
 	/**
-	 * * 创建文件
+	 * 创建文件
 	 * 
 	 * @param file
 	 *            待创建文件
@@ -317,7 +317,7 @@ public class FileManager {
 	}
 	
 	/**
-	 * * 创建文件
+	 * 创建文件
 	 * 
 	 * @param file
 	 *            待创建文件
@@ -581,15 +581,13 @@ public class FileManager {
 	 * 搜索文本内容
 	 * @param file			目标文件
 	 * @param target		查找目标
-	 * @param replaceText	替换为
-	 * @param result		搜索结果，当不关心结果时可以为null
-	 * @return 成功返回true，失败返回false
+	 * @param result		搜索结果
+	 * @return 成功返回true，失败(发生异常)返回false
 	 * @see FileReplaceResult
 	 */
-	public static boolean search(File file, String target, FileSearchResult result) {
-		//TODO 对目录的情况
-		if (isNull(file) || StringUtils.isEmpty(target) || isNull(result)) {
-			logger.error("file is nul or target is empty or result is null");
+	public static boolean search(File file, String target, SingleFileSearchResult result) {
+		if (isNull(file) || StringUtils.isEmpty(target) || isNull(result) || file.isDirectory()) {
+			logger.error("file is null or target is empty or result is null or file is Directory!");
 			return false;
 		}
 		BufferedReader br = null;
@@ -605,9 +603,8 @@ public class FileManager {
 					count++;
 				}
 			}
-			if(isNotNull(result)) {
-				result.setCount(count);
-			}
+			result.setCount(count);
+			return true;
 		} catch (FileNotFoundException e) {
 			logger.error("Not found " + file.getAbsolutePath(), e);
 			return false;
@@ -623,13 +620,40 @@ public class FileManager {
 				}
 			}
 		}
-		return true;
 	}
 	
-	public static void main(String[] args) {
-		FileSearchResult result = new FileSearchResult();
-		search(new File("D:\\h.log"), "File", result);
-		System.out.println(result);
-	}
 	
+	
+	/**
+	 * 裁剪文件
+	 * @param file 文件
+	 * @param length 裁剪长度,单位byte
+	 */
+	public static boolean truncate(File file, long length) {
+		if (isNull(file) || file.isDirectory()) {
+			logger.error("file is null or file is directory");
+			return false;
+		}
+		if(file.length() == length) {
+			return true;
+		}
+		FileChannel fileChannel = null;
+		try {
+			fileChannel = new RandomAccessFile(file, "rw").getChannel();
+			fileChannel.truncate(length);
+			fileChannel.close();
+			return true;
+		} catch(Exception e) {
+			logger.error("Truncate file " +file.getAbsolutePath() + " failed", e);
+			return false;
+		} finally {
+			if(isNotNull(fileChannel)) {
+				try {
+					fileChannel.close();
+				} catch (IOException e) {
+					logger.error("Close fileChannel failed", e);
+				}
+			}
+		}
+	}
 }

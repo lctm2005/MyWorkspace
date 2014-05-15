@@ -43,7 +43,7 @@ public class DirectoryManager {
 		}
 		return realCopy(src, target);
 	}
-	
+
 	/**
 	 * 复制文件夹
 	 * 
@@ -60,14 +60,15 @@ public class DirectoryManager {
 		File[] files = src.listFiles();
 		boolean res = true;
 		for (File file : files) {
-			if(file.isFile()) {
-				res = FileManager.copy(file, getTarget(file,srcPath,targetPath));
-				if(!res) {
+			if (file.isFile()) {
+				res = FileManager.copy(file,
+						getTarget(file, srcPath, targetPath));
+				if (!res) {
 					break;
 				}
-			}else {
+			} else {
 				res = realCopy(file, getTarget(file, srcPath, targetPath));
-				if(!res) {
+				if (!res) {
 					break;
 				}
 			}
@@ -76,8 +77,7 @@ public class DirectoryManager {
 	}
 
 	/**
-	 * 获取文件夹路径</br>
-	 * 自动补全文件夹路径后的'/'
+	 * 获取文件夹路径</br> 自动补全文件夹路径后的'/'
 	 * 
 	 * @param path
 	 * @return
@@ -92,16 +92,20 @@ public class DirectoryManager {
 
 	/**
 	 * 获取复制目标(文件or文件夹)
-	 * @param src		源(文件or文件夹)
-	 * @param srcPath			源文件夹路径
-	 * @param targetPath	目的文件夹路径
-	 * @return		复制目标(文件or文件夹)
+	 * 
+	 * @param src
+	 *            源(文件or文件夹)
+	 * @param srcPath
+	 *            源文件夹路径
+	 * @param targetPath
+	 *            目的文件夹路径
+	 * @return 复制目标(文件or文件夹)
 	 */
 	private static File getTarget(File src, String srcPath, String targetPath) {
 		String path = src.getAbsolutePath();
 		return new File(targetPath + path.substring(srcPath.length()));
 	}
-	
+
 	/**
 	 * 剪切文件夹
 	 * 
@@ -178,8 +182,11 @@ public class DirectoryManager {
 
 	/**
 	 * 重命名
-	 * @param source		源文件夹
-	 * @param newName  新名字
+	 * 
+	 * @param source
+	 *            源文件夹
+	 * @param newName
+	 *            新名字
 	 * @return
 	 */
 	public static boolean rename(File source, String newName) {
@@ -192,6 +199,35 @@ public class DirectoryManager {
 			return false;
 		}
 		String path = source.getAbsolutePath();
-		return source.renameTo(new File(path.substring(0, path.indexOf(source.getName())) + File.separator + newName));
+		return source.renameTo(new File(path.substring(0,
+				path.indexOf(source.getName()))
+				+ File.separator + newName));
 	}
+	
+	public static boolean search(File file, String target, FileSearchResult result) {
+		if (isNull(file) || StringUtils.isEmpty(target) || isNull(result) || file.isFile()) {
+			logger.error("file is null or target is empty or result is null or file is not directory!");
+			return false;
+		}
+		File[] files = file.listFiles();
+		if(files.length <= 0) {
+			return true;
+		}
+		for(File f :files) {
+			if(f.isDirectory()) {
+				if(!search(f, target, result)) {
+					return false;
+				}
+			}else {
+				SingleFileSearchResult r = new SingleFileSearchResult();
+				if(FileManager.search(f, target, r)) {
+					result.put(r);
+				} else {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	
 }

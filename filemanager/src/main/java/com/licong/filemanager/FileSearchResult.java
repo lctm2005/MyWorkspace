@@ -1,45 +1,61 @@
 package com.licong.filemanager;
 
-import java.io.File;
+import static com.licong.util.ObjectUtils.isNotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * 文件搜索结果
  * @author James
- *
  */
 public class FileSearchResult {
 
-	private List<String> lines = new ArrayList<String>();
-	private int count;
-	private File file;
+	private List<SingleFileSearchResult> results = new ArrayList<SingleFileSearchResult>();
+	private int count = 0;	 //命中次数
 	
-	public List<String> getLines() {
-		return lines;
+	/**
+	 * 添加单文件搜索结果
+	 * @param result
+	 */
+	public void put(SingleFileSearchResult result) {
+		if(isNotNull(result)) {
+			results.add(result);
+			count += result.getCount();
+		}
 	}
-	public void setLine(String line) {
-		this.lines.add(line);
+	
+	/**
+	 * 获取搜索结果
+	 * @return
+	 */
+	public List<SingleFileSearchResult> gets() {
+		return results;
 	}
+	
+	/**
+	 * 是否有搜索结果
+	 * @return
+	 */
+	public boolean hasResult() {
+		return results.size() > 0;
+	}
+	
+	/**
+	 * 获取命中次数
+	 * @return
+	 */
 	public int getCount() {
 		return count;
 	}
-	public void setCount(int count) {
-		this.count = count;
-	}
-	public File getFile() {
-		return file;
-	}
-	public void setFile(File file) {
-		this.file = file;
-	}
+
 	@Override
 	public String toString() {
 		StringBuilder str = new StringBuilder();
-		str.append("FileSearchResult[").append(count).append(" searched]\n");
+		str.append("[").append(count).append(" searched]\n");
 		str.append("Occurrences:\n");
-		for(String line : lines) {
-			str.append(line).append("\n");
+		for(SingleFileSearchResult result : results) {
+			str.append(result.toString()).append("\n");
 		}
 		return str.toString();
 	}

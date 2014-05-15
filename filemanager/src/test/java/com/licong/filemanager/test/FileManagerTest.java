@@ -10,6 +10,8 @@ import java.io.FileNotFoundException;
 
 import org.junit.Test;
 
+import com.licong.filemanager.SingleFileSearchResult;
+
 public class FileManagerTest {
 
 	private File source = new File("D:\\src.zip"); 
@@ -107,5 +109,19 @@ public class FileManagerTest {
 	@Test
 	public void testRename() {
 		assertEquals(SUCCESS, rename(source, "src2"));
+	}
+	
+	@Test
+	public void TestSearch() {
+		SingleFileSearchResult result = new SingleFileSearchResult();
+		assertEquals(SUCCESS, search(new File("I:\\h.log"), "test", result));
+		System.out.println(result.toString());
+	}
+	
+	@Test
+	public void TestTruncate() {
+		File file = new File("I:\\h.log");
+		System.out.println(file.length());
+		assertEquals(SUCCESS, truncate(file, 1L));
 	}
 }
