@@ -74,38 +74,6 @@ public class FileManager {
 			logger.error(source.getAbsolutePath() + " is not exist");
 			return false;
 		}
-//		BufferedInputStream bis = null;
-//		BufferedOutputStream bos = null;
-//		try {
-//			bis = new BufferedInputStream(new FileInputStream(source));
-//			bos = new BufferedOutputStream(new FileOutputStream(target));
-//			byte[] buffer = new byte[1024 * 5];
-//			int len;
-//			while ((len = bis.read(buffer)) != -1) {
-//				bos.write(buffer, 0, len);
-//			}
-//			bos.flush();
-//			return true;
-//		} catch (IOException e) {
-//			logger.error("Copy file failed", e);
-//			return false;
-//		} finally {
-//			if (isNotNull(bis)) {
-//				try {
-//					bis.close();
-//				} catch (IOException e) {
-//					logger.error("Close BufferedInputStream failed", e);
-//				}
-//			}
-//			if (isNotNull(bos)) {
-//				try {
-//					bos.close();
-//				} catch (IOException e) {
-//					logger.error("Close BufferedOutputStream failed", e);
-//				}
-//			}
-//		}
-		
 		//改用NIO复制文件
 		boolean createSuccess = create(target);
 		if(!createSuccess) {
