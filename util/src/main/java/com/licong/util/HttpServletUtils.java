@@ -1,7 +1,8 @@
 package com.licong.util;
 
 
-import it.sauronsoftware.base64.Base64;
+
+import org.apache.commons.codec.binary.Base64;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -67,7 +68,7 @@ public class HttpServletUtils {
 		try {
 			dos.write(value.getBytes());
 			dos.close();
-			String compress = String.valueOf(Base64.encode(bos.toByteArray()));
+			String compress = String.valueOf(Base64.encodeBase64(bos.toByteArray()));
 			bos.close();
 			response.addCookie(new Cookie("compress", compress));
 		} catch (IOException e) {
@@ -102,7 +103,7 @@ public class HttpServletUtils {
 		if (StringUtils.isEmpty(cookie.getValue())) {
 			return;
 		}
-		String compress = Base64.decode(cookie.getValue());
+		String compress = new String(Base64.decodeBase64(cookie.getValue()));
 		InflaterInputStream iis = new InflaterInputStream(
 				new ByteArrayInputStream(compress.getBytes()));
 		try {
