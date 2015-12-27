@@ -80,21 +80,21 @@ public class FileManager {
 			return false;
 		}
 		ByteBuffer buffer = ByteBuffer.allocate(1024*500);	
-		FileChannel fc = null;
+		FileChannel fi = null;
 		FileChannel fo = null;
 		FileInputStream fis = null;
 		FileOutputStream fos = null;
 		try {
 			fis = new FileInputStream(source);
 			fos = new FileOutputStream(target);
-			fc = fis.getChannel();
+			fi = fis.getChannel();
 			fo = fos.getChannel();
 			int r = 0;  
 			while (r != -1) {  
 	            buffer.clear();  
-	            r = fc.read(buffer);  
+	            r = fi.read(buffer);
 	            buffer.flip();  
-	            fo.write(buffer);  
+	            fo.write(buffer);
 	        }  
 			return true;
 		} catch (FileNotFoundException e) {
@@ -104,9 +104,9 @@ public class FileManager {
 			e.printStackTrace();
 			return false;
 		}finally {
-			if (isNotNull(fc)) {
+			if (isNotNull(fi)) {
 				try {
-					fc.close();
+					fi.close();
 				} catch (IOException e) {
 					logger.error("Close Input FileChannel failed", e);
 				}
