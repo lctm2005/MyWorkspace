@@ -1,0 +1,22 @@
+$(document).ready(
+    function() {
+        $("#hello").html("Hello world!");
+        var array = new Array();
+        createArray(array, [1,2,3], 0);
+        array[1][2][3] = {id:1,name:"name"};
+    });
+
+
+
+/**
+* param array
+* param indexArray Array,if you want to create array[1][2][3], then indexArray=[1,2,3]
+* param currentIndex Integer,begin with 0
+**/
+function createArray(array, indexArray, currentIndex) {
+    if(indexArray.length == currentIndex+1) {
+        return;
+    }
+    array[indexArray[currentIndex]] = new Array();
+    createArray(array[indexArray[currentIndex]], indexArray, currentIndex+1);
+} 
